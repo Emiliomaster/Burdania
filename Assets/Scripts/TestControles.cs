@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class TestControles : MonoBehaviour
 {
     //PARA EL DASH
@@ -16,6 +17,12 @@ public class TestControles : MonoBehaviour
     float tiempoDashAhora = tiempoMaximoDash;//esto se usa para que todos los dashes duren lo mismo y se detengan con la frenada
     float velocidadDash = 6;// creo que se explica solo pero es que tan rapido se mueve, la diferencia con el tiempo maximo es que si este se aumenta el personaje va mas rapido y en el otro el dash dura mas o menos d
     //PARA EL DASH
+    
+    //PARA EL DIALOGO//
+    public bool sePuedeMover = true;
+    public GameObject dialogo;
+    //PARA EL DIALOGO//
+    public TestAtaque ataque;
 
     public CharacterController jugador;
     public float movHorizontal;
@@ -32,24 +39,32 @@ public class TestControles : MonoBehaviour
     public float velCaida;
     public float fuerzaSalto;
 
+
+    public GameObject barb;
+    public GameObject toscal;
+    public GameObject valena;
+    public GameObject cruzado;
+ 
+
     void Start()
     {
         gravedad = -9.8f;
         fuerzaSalto = 4;
         jugador = GetComponent<CharacterController>();
         camara = FindObjectOfType<Camera>();
+        
     }
 
     void FixedUpdate()
     {
         DespasamientoJugador();
-
     }
 
 
 
     private void DespasamientoJugador()
     {
+        if (sePuedeMover == true) {
         movHorizontal = Input.GetAxis("Horizontal");
         movVertical = Input.GetAxis("Vertical");
 
@@ -66,7 +81,9 @@ public class TestControles : MonoBehaviour
         SetGravedad();
         SetSalto();
         Dash(); //AGREGADO ACA // 
+        ataque.Atacar(); //AGREGADO ACA//
         jugador.Move(movJugador * Time.deltaTime);
+        }
 
 
     }
@@ -81,6 +98,7 @@ public class TestControles : MonoBehaviour
 
         camAdelante = camAdelante.normalized;
         camDerecha = camDerecha.normalized;
+        
     }
     void SetGravedad()
     {
@@ -104,7 +122,7 @@ public class TestControles : MonoBehaviour
         }
     }
 
-    ///
+    
     void Dash()
     {
         if (Input.GetButtonDown("Fire2") & jugador.isGrounded & Time.time > siguienteDash) //el time > siguiente dash es que el tiempo que paso desde que se usa la habilidad se suma con el cooldown hasta que time sea mayor y se pueda volver a usar el dash, puse lo de isGrounded para no poder usarlo en el aire
@@ -123,6 +141,16 @@ public class TestControles : MonoBehaviour
 
         }
         jugador.Move(direccionDash * Time.deltaTime * velocidadDash); // con esto se hace el dash,se "adelanta al tiempo" moviendose rapido
+    }
+    
+    
+   
+   public void NoSeMueve()
+    {
+        sePuedeMover = false;
+    }
+    public void SeMueve() 
+    {
+        sePuedeMover = true;
     } 
-    ///
 }
